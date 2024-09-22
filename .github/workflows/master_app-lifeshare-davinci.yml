@@ -19,10 +19,10 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release LifeShare\LifeShare.csproj
+        run: dotnet build --configuration Release LifeShare.csproj
 
       - name: Publish with dotnet
-        run: dotnet publish -c Release -o ${{ github.workspace }}/myapp LifeShare\LifeShare.csproj
+        run: dotnet publish -c Release -o myapp LifeShare.csproj
 
       - name: List files in output directory
         run: dir ${{ github.workspace }}/myapp
