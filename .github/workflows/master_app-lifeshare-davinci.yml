@@ -22,7 +22,7 @@ jobs:
         run: dotnet build --configuration Release LifeShare\LifeShare.csproj
 
       - name: Publish with dotnet
-        run: dotnet publish -c Release -o LifeShare\LifeShare.csproj
+        run: dotnet publish -c Release -o ./myapp LifeShare\LifeShare.csproj
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
