@@ -26,6 +26,11 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release LifeShare.csproj
 
+      - name: Create output directory
+        run: |
+          mkdir ${{ github.workspace }}/myapp
+          echo "Created directory myapp."
+
       - name: Publish with dotnet
         run: |
           dotnet publish -c Release -o ${{ github.workspace }}/myapp LifeShare.csproj
@@ -68,6 +73,11 @@ jobs:
         with:
           name: .net-app
       
+      - name: List downloaded files
+        run: |
+          echo "Listing files in the downloaded artifact:"
+          dir ${{ github.workspace }}/myapp
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
