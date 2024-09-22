@@ -18,20 +18,40 @@ jobs:
         with:
           dotnet-version: '6.0.x'
 
+      - name: List workspace files
+        run: |
+          echo "Listing all files in the workspace:"
+          dir ${{ github.workspace }}
+
       - name: Build with dotnet
         run: dotnet build --configuration Release LifeShare.csproj
 
       - name: Publish with dotnet
-        run: dotnet publish -c Release -o ${{ github.workspace }}/myapp LifeShare.csproj
+        run: |
+          dotnet publish -c Release -o ${{ github.workspace }}/myapp LifeShare.csproj
+          echo "Publish completed with exit code: $?"
 
       - name: List files in output directory
-        run: dir ${{ github.workspace }}/myapp
+        run: |
+          echo "Listing files in the output directory:"
+          dir ${{ github.workspace }}/myapp
+
+      - name: Check for errors
+        run: |
+          if [ ! -d "${{ github.workspace }}/myapp" ]; then
+            echo "Directory myapp does not exist."
+            exit 1
+          fi
+          if [ -z "$(ls -A ${{ github.workspace }}/myapp)" ]; then
+            echo "Directory myapp is empty."
+            exit 1
+          fi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{ github.workspace }}/myapp/*  
+          path: ${{ github.workspace }}/myapp/*
 
   deploy:
     runs-on: windows-latest
@@ -40,7 +60,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write 
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -61,4 +81,4 @@ jobs:
         with:
           app-name: 'app-lifeshare-davinci'
           slot-name: 'Production'
-          package: ${{ github.workspace }}/myapp/*  
+          package: ${{ github.workspace }}/myapp/*
