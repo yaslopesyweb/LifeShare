@@ -19,19 +19,19 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release LifeShare.csproj
+        run: dotnet build --configuration Release LifeShare\LifeShare.csproj
 
       - name: Publish with dotnet
-        run: dotnet publish -c Release -o ./myapp LifeShare.csproj
+        run: dotnet publish -c Release -o ${{ github.workspace }}/myapp LifeShare\LifeShare.csproj
 
       - name: List files in output directory
-        run: dir ./myapp
+        run: dir ${{ github.workspace }}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./myapp
+          path: ${{ github.workspace }}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -61,4 +61,4 @@ jobs:
         with:
           app-name: 'app-lifeshare-davinci'
           slot-name: 'Production'
-          package: ./myapp
+          package: ${{ github.workspace }}/myapp
