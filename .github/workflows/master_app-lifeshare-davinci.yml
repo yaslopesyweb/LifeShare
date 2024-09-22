@@ -38,14 +38,14 @@ jobs:
 
       - name: Check for errors
         run: |
-          if [ ! -d "${{ github.workspace }}/myapp" ]; then
-            echo "Directory myapp does not exist."
+          if (!(Test-Path -Path "${{ github.workspace }}/myapp")) {
+            Write-Host "Directory myapp does not exist."
             exit 1
-          fi
-          if [ -z "$(ls -A ${{ github.workspace }}/myapp)" ]; then
-            echo "Directory myapp is empty."
+          }
+          if (-Not (Get-ChildItem "${{ github.workspace }}/myapp")) {
+            Write-Host "Directory myapp is empty."
             exit 1
-          fi
+          }
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
